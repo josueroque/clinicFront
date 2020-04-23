@@ -1,17 +1,23 @@
 const path=require('path');
 const HtmlWebpackPlugin=require('html-webpack-plugin');
+const {CleanWebpackPlugin}=require('clean-webpack-plugin');
+const webpack=require('webpack');
 module.exports={
     devtool:'sorce-map',
     entry:'./src/index.js', 
     output:{
         path:path.join(__dirname,'dist'),
-        filename:'bundle.js'
+        filename:'bundle.js',
+        publicPath: '/'
     },
     devServer:{
-        port:4000
+        port:4000,
+        historyApiFallback: true,
+        // contentBase: './',
+        // hot: true 
     },
     resolve:{
-        extensions:['.js','.jsx']
+        extensions:['.js','.jsx'] 
     }
     ,
     module:{
@@ -44,7 +50,10 @@ module.exports={
     plugins:[
         new HtmlWebpackPlugin({
             template:'./src/index.html'
-        })
-    ]
+        }),
+        new webpack.ProgressPlugin(),
+//        new CleanWebpackPlugin(),
+
+    ],
 
 }
