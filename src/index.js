@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import App from './components/App';
 import './content.scss';
+import regeneratorRuntime from 'regenerator-runtime';
 render(
     <div>
         <h1></h1>

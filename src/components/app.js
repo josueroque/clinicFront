@@ -1,6 +1,8 @@
 import React,{Component} from 'react';
 import GeneralInfo from './GeneralInfo';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import PatientsProvider from '../context/PatientsContext';
+
 
  class App extends Component{
     
@@ -9,7 +11,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
     return(
         <Router>
             <Switch>
-                <Route exact path='/general' component={GeneralInfo}  />
+                <PatientsProvider>
+                    <Route exact path='/general' component={GeneralInfo}  />
+                </PatientsProvider>
                 {/* <Route exact path='/' component={Home}  /> */}
             </Switch>
           
