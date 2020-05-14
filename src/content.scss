@@ -1,6 +1,7 @@
 @import "reset";
 
 $primary:white;
+$secondary:pink;
 
 body{
     background-color: $primary;
@@ -12,7 +13,8 @@ body{
 }
 
 h1{
-    margin-top: 1vh !important; 
+    
+    margin-top: 1vw !important; 
     text-align: center;
 }
 
@@ -40,4 +42,32 @@ h1{
 .Loader{
     margin-left: 48vw;
     margin-top: 5vw;
+}
+
+.Container-Home{
+    position: relative;
+    margin-top: 5vw !important;
+    display: grid;
+    grid-template-columns: 1fr  ;
+    grid-gap: 20px ;
+  }
+.Link{
+    text-decoration: none;
+    color: #f1f1f1;
+}
+.AppBar{
+    
+    text-align: center;
+}
+.History{
+    display: grid 1fr 1fr;
+}
+.ContainerHistory{
+    display: grid !important ;
+    grid-template-columns: 0.33fr  0.33fr 0.33fr;
+}
+
+h3{
+    text-align: center;
+    color: blue ;
 }

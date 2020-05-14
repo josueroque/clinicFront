@@ -70,9 +70,9 @@ const save=async(patient)=>{
       updateSavedStatus(true);
       updateErrorStatus(true);
 
-      console.log( errorStatus);
-      console.log( savedStatus);
-      console.log( loading);
+      // console.log( errorStatus);
+      // console.log( savedStatus);
+      // console.log( loading);
   }
 }
 
