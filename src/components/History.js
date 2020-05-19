@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container,Grid,Button } from '@material-ui/core';
+import { Container,Grid,Button,FormControl,TextField } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -84,20 +84,35 @@ export default function History() {
   const [heartDicease,updateHeartDicease]=useState(false);
   const [kidneyDicease,updateKidneyDicease]=useState(false);
   const [violence,updateViolence]=useState(false);
+//Obstetrics
+  const[previousGestation,updatePreviousGestation]=useState();
+  const[abortions,updateAbortions]=useState();
+  const[spontaneousConsecutive,updateSpontaneousConsecutive]=useState(false);
+  const[deliveries,updateDeliveries]=useState();
+  const[vaginal,updateVaginal]=useState();
+  const[cesareans,updateCesareans]=useState();
+  const[bornAlive,updateBornAlive]=useState();
+  const[bornDead,updateBornDead]=useState();
+  const[deadFirstWeek,updateDeadFirstWeek]=useState();
+  const[deadAfterFirstWeek,updateDeadAfterFirstWeek]=useState();
+  const[stillAlive,updateStillAlive]=useState();
+  const[previousWeight,updatePreviousWeight]=useState();
+  const[twinsHistory,updateTwinsHistory]=useState();
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   
-  const GreenCheckbox = withStyles({
-    root: {
-      color: green[400],
-      '&$checked': {
-        color: green[600],
-      },
-    },
-    checked: {},
-  })((props) => <Checkbox color="default" {...props} />);
+  // const GreenCheckbox = withStyles({
+  //   root: {
+  //     color: green[400],
+  //     '&$checked': {
+  //       color: green[600],
+  //     },
+  //   },
+  //   checked: {},
+  // })((props) => <Checkbox color="default" {...props} />);
   
   
   return (
@@ -217,7 +232,161 @@ export default function History() {
         </Container>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <Container className="Obstetrics">
+              <FormGroup className="Form">
+                  <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                         label="Previous Gestations"
+                         variant="outlined"
+                         size="small"
+                         value={previousGestation}
+                         onChange={e=>{updatePreviousGestation(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="abortions"
+                         variant="outlined"
+                         size="small"
+                         value={abortions}
+                        onChange={e=>{updateAbortions(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControlLabel
+                    control={<Checkbox value={spontaneousConsecutive} onChange={e=>{updateSpontaneousConsecutive(e.target.value)}}  />}
+                    label="3 Spontaneous Consecutive"
+                    labelPlacement="start"
+                    className="CenteredCheck"
+                  /> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                         label="Deliveries"
+                         variant="outlined"
+                         size="small"
+                         value={deliveries}
+                        onChange={e=>{updateDeliveries(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        //id="idNumber"
+                         label="Last Previous Weight(g)"
+                         variant="outlined"
+                         size="small"
+                         value={previousWeight}
+                         onChange={e=>{updatePreviousGestation(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Vaginal Deliveries"
+                        variant="outlined"
+                        size="small"
+                        value={vaginal}
+                        onChange={e=>{updateVaginal(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                         label="Cesareans"
+                         variant="outlined"
+                         size="small"
+                         value={cesareans}
+                         onChange={e=>{updateCesareans(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Born Dead"
+                        variant="outlined"
+                        size="small"
+                        value={bornDead}
+                        onChange={e=>{updateBornDead(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Dead First Week"
+                        variant="outlined"
+                        size="small"
+                        value={deadFirstWeek}
+                        onChange={e=>{updateDeadFirstWeek(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Dead After First Week"
+                        variant="outlined"
+                        size="small"
+                        value={deadAfterFirstWeek}
+                        onChange={e=>{updateDeadAfterFirstWeek(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Born Alive"
+                        variant="outlined"
+                        size="small"
+                        value={bornAlive}
+                        onChange={e=>{updateBornDead(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Id Number"
+                        variant="outlined"
+                        size="small"
+                        value={stillAlive}
+                        onChange={e=>{updateStillAlive(e.target.value)}}
+                      />
+                </FormControl> 
+                <FormControl className={classes.formControl}> 
+                      <TextField 
+                        type="number" 
+                        className="FormNumber"
+                        // id="idNumber"
+                        label="Twins History"
+                        variant="outlined"
+                        size="small"
+                        value={twinsHistory}
+                        onChange={e=>{updateTwinsHistory(e.target.value)}}
+                      />
+                </FormControl> 
+
+              </FormGroup>  
+        </Container>
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
@@ -226,7 +395,7 @@ export default function History() {
     </Container>
 
     <Grid container justify="center">
-            <Button className="" type="submit" variant="contained" color="primary">    Save   </Button>
+            <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Save   </Button>
     </Grid>
     </Fragment>
   );
