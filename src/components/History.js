@@ -1,29 +1,31 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container,Grid,Button,FormControl,TextField } from '@material-ui/core';
+import { Container,Grid,Button,FormControl,TextField,FormLabel,RadioGroup,Radio,InputLabel,Select,MenuItem } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-import HelpIcon from '@material-ui/icons/Help';
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import ThumbUp from '@material-ui/icons/ThumbUp';
+// import HelpIcon from '@material-ui/icons/Help';
+// import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
+// import ThumbDown from '@material-ui/icons/ThumbDown';
+// import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import SideBar from './SideBar';
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+// import { withStyles } from '@material-ui/core/styles';
+// import { green } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
+// import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+// import CheckBoxIcon from '@material-ui/icons/CheckBox';
+// import Favorite from '@material-ui/icons/Favorite';
+//import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import DateFnsUtils from '@date-io/date-fns';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -98,6 +100,11 @@ export default function History() {
   const[stillAlive,updateStillAlive]=useState();
   const[previousWeight,updatePreviousWeight]=useState();
   const[twinsHistory,updateTwinsHistory]=useState();
+  //Previous pregnancy
+  const [endDate,updateEndDate]= useState(null);
+  const [terminationCondition,updateTerminationCondition]=useState('');
+  const [plannedPregnancy,updatePlannedPregnancy]=useState('');
+  const [contraceptiveMethod,updateContraceptiveMethod]=useState('none');
   
 
   const handleChange = (event, newValue) => {
@@ -118,7 +125,8 @@ export default function History() {
   return (
     <Fragment>
     <SideBar></SideBar>
-    <Container className="Container-Home">
+    <h1 className="HistoryTitle"> History </h1>
+    <Container className="Container-History">
     <div className={classes.root}>
      
       <AppBar className="AppBar" position="static" color="default">
@@ -389,13 +397,77 @@ export default function History() {
         </Container>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <Container className="Container-History">
+          <FormGroup className="Form">
+              <FormControl className={classes.formControl}> 
+                <FormLabel className="RadioLabel" component="legend">Termination Condition</FormLabel>
+                <RadioGroup 
+                  className="RadioCondition"
+                  aria-label="socialSec" 
+                  name="socialSec"
+                 value={terminationCondition}
+                  onChange={e=>{updateTerminationCondition(e.target.value)}}
+                >
+                  <FormControlLabel  value = "normal" control={<Radio />} label="Normal" />
+                  <FormControlLabel value = "cesarean" control={<Radio />} label="Cesarean" />
+                  <FormControlLabel value = "abortion" control={<Radio />} label="Abortion" />
+
+                </RadioGroup>
+              </FormControl> 
+                  <FormControl className={classes.formControl}> 
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid container justify="left">
+                          <KeyboardDatePicker
+                            margin="normal"
+                            id="date-picker-dialog"
+                            label="Previous Pregnancy End Date"
+                            format="MM/dd/yyyy"
+                            value={endDate}
+                            onChange={updateEndDate}
+                            KeyboardButtonProps={{
+                              'aria-label': 'change date',
+                            }}
+                        />
+                        </Grid>
+                  </MuiPickersUtilsProvider>
+                </FormControl>
+                <FormControl className={classes.formControl}> 
+                <FormLabel className="RadioLabel" component="legend">Planned Pregnancy?</FormLabel>
+                <RadioGroup 
+                  className="RadioCondition"
+                  aria-label="socialSec" 
+                  name="plannedPregnancy"
+                  value={plannedPregnancy}
+                  onChange={e=>{updatePlannedPregnancy(e.target.value)}}
+                >
+                  <FormControlLabel  value = "true" control={<Radio />} label="Yes" />
+                  <FormControlLabel value = "false" control={<Radio />} label="No" />
+
+                </RadioGroup>
+              </FormControl> 
+              <FormControl className={classes.formControl}> 
+                  <InputLabel id="demo-simple-select-label">Contraceptive Method </InputLabel>
+                  <Select  name="contraceptiveMethod"   onChange={e=>{updateContraceptiveMethod(e.target.value)}}  > 
+                  {/*  */}
+                        <MenuItem value="none" >None</MenuItem>
+                        <MenuItem value="barrier">Barrier</MenuItem>
+                        <MenuItem value="diu">DIU</MenuItem>
+                        <MenuItem value="hormonal" >Hormonal</MenuItem>
+                        <MenuItem value="emergency">Emergency</MenuItem>
+                        <MenuItem value="natural">natural</MenuItem>
+                  </Select>
+              </FormControl> 
+              
+            </FormGroup>
+        </Container>
+        
       </TabPanel>
     </div>
     </Container>
 
     <Grid container justify="center">
             <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Save   </Button>
+            <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Actual Gestation   </Button>
     </Grid>
     </Fragment>
   );

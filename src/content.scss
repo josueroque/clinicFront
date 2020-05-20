@@ -78,5 +78,17 @@ h3{
     margin-right: 38vw !important;
 }
 .HistoryButton{
-    width: 20vw;
+    width: 15vw;
+    margin-left: 1vw !important;
+}
+.HistoryTitle{
+    margin-top: 5vw !important;
+    
+}
+
+.RadioCondition{
+    width: 50% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr;
+
 }
