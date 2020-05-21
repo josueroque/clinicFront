@@ -1,31 +1,28 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container,Grid,Button,FormControl,TextField,FormLabel,RadioGroup,Radio,InputLabel,Select,MenuItem } from '@material-ui/core';
+import { Container,Grid,Button,FormControl,TextField,FormLabel,RadioGroup,Radio,InputLabel,Select,MenuItem, ButtonGroup } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-// import HelpIcon from '@material-ui/icons/Help';
-// import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-// import ThumbDown from '@material-ui/icons/ThumbDown';
-// import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import SideBar from './SideBar';
-// import { withStyles } from '@material-ui/core/styles';
-// import { green } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
-// import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-// import CheckBoxIcon from '@material-ui/icons/CheckBox';
-// import Favorite from '@material-ui/icons/Favorite';
-//import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import DateFnsUtils from '@date-io/date-fns';
+import MuiAlert from '@material-ui/lab/Alert';
+import {PatientsContext} from '../context/PatientsContext';
+import Loader from './Loader';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,9 +65,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function History() {
+export default function History(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [idNumber,updateIdNumber]=useState("08011988411578");
   const [familyTcb,updateFamilyTcb]=useState(false);
   const [familyDiabetes,updateFamilyDiabetes]=useState(false);
   const [familyHypertension,updateFamilyHypertension]=useState(false);
@@ -103,32 +101,110 @@ export default function History() {
   //Previous pregnancy
   const [endDate,updateEndDate]= useState(null);
   const [terminationCondition,updateTerminationCondition]=useState('');
-  const [plannedPregnancy,updatePlannedPregnancy]=useState('');
+  const [plannedPregnancy,updatePlannedPregnancy]=useState(null);
   const [contraceptiveMethod,updateContraceptiveMethod]=useState('none');
-  
+  //state
+  const [loading,updateLoading]=useState(false);
+  const [errorStatus,updateErrorStatus]=useState(false);
+  const [savedStatus,updateSavedStatus]=useState(false);
+
+  const{saveHistoryFunction}=useContext(PatientsContext);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   
-  // const GreenCheckbox = withStyles({
-  //   root: {
-  //     color: green[400],
-  //     '&$checked': {
-  //       color: green[600],
-  //     },
-  //   },
-  //   checked: {},
-  // })((props) => <Checkbox color="default" {...props} />);
   
-  
+  const save=async(history)=>{
+    try{
+        updateLoading(true);
+        updateErrorStatus(true);
+        updateSavedStatus(false);
+        await wait(1000);
+        updateLoading(false);
+        updateSavedStatus(true);
+        let response = await saveHistoryFunction(history);
+        console.log('desde save' + response);
+        if (response.statusText==="OK") {
+          updateErrorStatus(false);
+        }
+        await wait(1000);
+ 
+   }
+     catch(error){
+       console.log(error);
+       updateSavedStatus(true);
+       updateErrorStatus(true);
+ 
+
+   }
+ }
+ 
+ const wait=async(ms)=> {
+  return new Promise(resolve => {
+  setTimeout(resolve, ms);
+  });
+}
+
   return (
     <Fragment>
     <SideBar></SideBar>
     <h1 className="HistoryTitle"> History </h1>
     <Container className="Container-History">
     <div className={classes.root}>
-     
+    {loading===true?<Loader></Loader>:   
+    <form className={classes.root} noValidate autoComplete="off"
+      onSubmit={ e=>{
+        e.preventDefault();
+        
+        const history={
+          idNumber,
+          familyTcb,
+          familyDiabetes,
+          familyHypertension,
+          familyPreeclampsia,
+          familyEeclampssia,
+          personalTcb,
+          personalDiabetes,
+          personalHypertension,
+          personalPreeclampsia,
+          personalEeclampssia,
+          surgery,
+          infertility,
+          heartDicease,
+          kidneyDicease,
+          violence,
+          previousGestation,
+          abortions,
+          spontaneousConsecutive,
+          deliveries,
+          vaginal,
+          cesareans,
+          bornAlive,
+          bornDead,
+          deadFirstWeek,
+          deadAfterFirstWeek,
+          stillAlive,
+          previousWeight,
+          twinsHistory,
+          endDate,
+          terminationCondition,
+          plannedPregnancy,
+          contraceptiveMethod
+        }
+        
+        save (history);
+        
+      }
+
+      }
+    >
+      <FormControl className={classes.formControl}>   
+      { savedStatus===true?
+        <Alert severity={errorStatus===true?'error':'success'}>{errorStatus===true ? 'An error occured, please check your data':'Advert saved succefully!'}</Alert>
+        :''  
+      }
+      </FormControl>
       <AppBar className="AppBar" position="static" color="default">
         <Tabs
           value={value}
@@ -447,7 +523,7 @@ export default function History() {
               </FormControl> 
               <FormControl className={classes.formControl}> 
                   <InputLabel id="demo-simple-select-label">Contraceptive Method </InputLabel>
-                  <Select  name="contraceptiveMethod"   onChange={e=>{updateContraceptiveMethod(e.target.value)}}  > 
+                  <Select  name="contraceptiveMethod" value={contraceptiveMethod}  onChange={e=>{updateContraceptiveMethod(e.target.value)}}  > 
                   {/*  */}
                         <MenuItem value="none" >None</MenuItem>
                         <MenuItem value="barrier">Barrier</MenuItem>
@@ -462,13 +538,18 @@ export default function History() {
         </Container>
         
       </TabPanel>
+        <Grid container justify="center">
+            <ButtonGroup>
+              <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Save   </Button>
+              <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Actual Gestation   </Button>
+            </ButtonGroup>                
+        </Grid>
+    </form>
+    } 
     </div>
     </Container>
 
-    <Grid container justify="center">
-            <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Save   </Button>
-            <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Actual Gestation   </Button>
-    </Grid>
+
     </Fragment>
   );
 }
