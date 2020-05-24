@@ -7,7 +7,8 @@ import { FormGroup,FormControl,RadioGroup,FormControlLabel,Button,
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import DateFnsUtils from '@date-io/date-fns';         
+import DateFnsUtils from '@date-io/date-fns';  
+import SideBar from './SideBar';       
 import {PatientsContext} from '../context/PatientsContext';
 import Loader from './Loader';
 
@@ -84,6 +85,7 @@ const wait=async(ms)=> {
 }
 return(
   <Fragment>
+    <SideBar></SideBar>
     <h1> General Information </h1>
  
     {loading===true?<Loader></Loader>: 

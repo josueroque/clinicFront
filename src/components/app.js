@@ -3,6 +3,7 @@ import GeneralInfo from './GeneralInfo';
 import Home from './Home';
 import History from './History';
 import Patients from './Patients';
+import Search from './Search';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PatientsProvider from '../context/PatientsContext';
 import { createMuiTheme,ThemeProvider } from '@material-ui/core/styles';
@@ -32,6 +33,7 @@ const theme = createMuiTheme({
                         <Route exact path='/patients' component={Patients}  />
                         <Route exact path='/general' component={GeneralInfo}  />
                         <Route exact path='/history' component={History}  />
+                        <Route exact path='/search' component={Search}  />
                         <Route exact path='/' component={Home}  />
                     </ThemeProvider>    
                 </PatientsProvider>

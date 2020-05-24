@@ -16,14 +16,22 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Archive from '@material-ui/icons/Archive';
+import Create from '@material-ui/icons/Create';
+import PregnatWoman from '@material-ui/icons/PregnantWoman';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import LockOpen from '@material-ui/icons/LockOpen';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import Search from '@material-ui/icons/Search';
+import FolderOpen from '@material-ui/icons/FolderOpen';
 import Info from '@material-ui/icons/Info';
 import AssignmentInd from '@material-ui/icons/AssignmentInd';
 import Button from '@material-ui/core/Button';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
+import Collapse from '@material-ui/core/Collapse';
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -80,12 +88,16 @@ const useStyles = makeStyles(theme => ({
     }),
     marginLeft: 0,
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 export default function Sidebar() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [openNested, setOpenNested] = React.useState(false);
   const user=useState({token:'test'});
 
 
@@ -97,6 +109,9 @@ export default function Sidebar() {
     setOpen(false);
   };
 
+  const handleClick = () => {
+    setOpenNested(!openNested);
+  };
   
   return (
     <Fragment>
@@ -122,7 +137,7 @@ export default function Sidebar() {
           </IconButton>
           <Link to={ {pathname: `/`}} className="Link" >  
           <Typography variant="h6" noWrap>
-            Carsdeals
+             Gynecologysts Information System
           </Typography>
           </Link>
         
@@ -158,22 +173,59 @@ export default function Sidebar() {
                 <ListItemText primary={!user.token ? 'Login':'Logout'} />
             </ListItem>
           </Link>
-          <Link key ={'Patients'} to={{pathname: `/patients`}}  className="Link-menu">    
+          {/* <Link key ={'Patients'} to={{pathname: `/patients`}}  className="Link-menu">    
             <ListItem button  >
               <ListItemIcon>
                 <AssignmentInd />
               </ListItemIcon>
               <ListItemText primary='Patients' />
             </ListItem>
-         </Link>
-         <Link key ={'Search'} to={{pathname: `/Search`}}  className="Link-menu">    
-            <ListItem button  >
+         </Link> */}
+         {/* <Link key ={'Search'} to={{pathname: `/Search`}}  className="Link-menu">     */}
+            <ListItem button button onClick={handleClick}  >
               <ListItemIcon>
-                <Search />
+                <AssignmentInd />
               </ListItemIcon>
-              <ListItemText primary='Search' />
+              <ListItemText primary='Patients' />
+              {openNested ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
-         </Link> 
+            <Collapse in={openNested} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+              <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <Create />
+                  </ListItemIcon>
+                  <ListItemText primary="Create" />
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <Search />
+                  </ListItemIcon>
+                  <ListItemText primary="Search" />
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <Archive />
+                  </ListItemIcon>
+                  <ListItemText primary="General Information" />
+                </ListItem>
+                                      
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <FolderOpen />
+                  </ListItemIcon>
+                  <ListItemText primary="History" />
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <PregnatWoman />
+                  </ListItemIcon>
+                  <ListItemText primary="Actual Gestation" />
+                </ListItem>                                
+
+              </List>
+            </Collapse>            
+         {/* </Link>  */}
 
         
         </List>
