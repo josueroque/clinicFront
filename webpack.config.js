@@ -17,7 +17,7 @@ module.exports={
         // hot: true 
     },
     resolve:{
-        extensions:['.js','.jsx'] 
+        extensions:['.js','.jsx','.jpg','.png'] 
     }
     ,
     module:{
@@ -42,6 +42,13 @@ module.exports={
               {
                 test: /\.scss$/,
                 use: ['style-loader', 'css-loader', 'sass-loader'],
+              },
+
+              {
+                test: /\.(png|svg|jpg|gif)$/,
+                  use: [
+                           'file-loader',
+                        ],
               },
 
         ]

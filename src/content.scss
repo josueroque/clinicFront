@@ -1,7 +1,7 @@
 @import "reset";
 
-$primary:white;
-$secondary:pink;
+$primary:purple;
+$secondary:green;
 
 body{
     background-color: $primary;
@@ -56,7 +56,7 @@ h1{
     color: #f1f1f1;
 }
 .AppBar{
-    
+    margin-top: -3vw !important;
     text-align: center;
 }
 .History{
@@ -92,3 +92,12 @@ h3{
     grid-template-columns: 1fr 1fr 1fr;
 
 }
+
+.Link{
+    text-decoration: none;
+    color: #f1f1f1;
+  }
+
+  .Link-menu{
+    text-decoration: none;
+  }

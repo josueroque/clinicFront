@@ -1,15 +1,16 @@
 import React, { Fragment, useState,useContext } from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container,Grid,Button,FormControl,TextField,FormLabel,RadioGroup,Radio,InputLabel,Select,MenuItem, ButtonGroup } from '@material-ui/core';
+import { Container,Grid,Button,FormControl,TextField,FormLabel,Typography,
+        RadioGroup,Radio,InputLabel,Select,MenuItem, ButtonGroup } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+//import Typography from '@material-ui/core/Typography';
+//import Box from '@material-ui/core/Box';
 import SideBar from './SideBar';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -19,36 +20,37 @@ import DateFnsUtils from '@date-io/date-fns';
 import MuiAlert from '@material-ui/lab/Alert';
 import {PatientsContext} from '../context/PatientsContext';
 import Loader from './Loader';
+import TabPanel from './TabPanel';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+// function TabPanel(props) {
+//   const { children, value, index, ...other } = props;
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`scrollable-force-tabpanel-${index}`}
-      aria-labelledby={`scrollable-force-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`scrollable-force-tabpanel-${index}`}
+//       aria-labelledby={`scrollable-force-tab-${index}`}
+//       {...other}
+//     >
+//       {value === index && (
+//         <Box p={3}>
+//           <Typography>{children}</Typography>
+//         </Box>
+//       )}
+//     </div>
+//   );
+// }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
+// TabPanel.propTypes = {
+//   children: PropTypes.node,
+//   index: PropTypes.any.isRequired,
+//   value: PropTypes.any.isRequired,
+// };
 
 function a11yProps(index) {
   return {
@@ -149,7 +151,10 @@ export default function History(props) {
   return (
     <Fragment>
     <SideBar></SideBar>
-    <h1 className="HistoryTitle"> History </h1>
+    {/* <h1 className="HistoryTitle"> History </h1> */}
+    <h1  className="HistoryTitle"> 
+        History 
+      </h1>
     <Container className="Container-History">
     <div className={classes.root}>
     {loading===true?<Loader></Loader>:   

@@ -1,6 +1,4 @@
 import React,{Fragment,useState} from 'react';
-//import {useDispatch,useSelector} from 'react-redux';
-//import {logoutUserAction} from '../store/actions/userActions';
 import clsx from 'clsx';
 import {Link} from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -90,10 +88,6 @@ export default function Sidebar() {
   const [open, setOpen] = React.useState(false);
   const user=useState({token:'test'});
 
-  //const dispatch=useDispatch(); 
-  //const user=useSelector(state=>state.user.user);
-  //const logOut=(userRedux) =>dispatch(logoutUserAction(userRedux));
-
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -164,12 +158,12 @@ export default function Sidebar() {
                 <ListItemText primary={!user.token ? 'Login':'Logout'} />
             </ListItem>
           </Link>
-          <Link key ={'Register'} to={{pathname: `/Register`}}  className="Link-menu">    
+          <Link key ={'Patients'} to={{pathname: `/patients`}}  className="Link-menu">    
             <ListItem button  >
               <ListItemIcon>
                 <AssignmentInd />
               </ListItemIcon>
-              <ListItemText primary='Register' />
+              <ListItemText primary='Patients' />
             </ListItem>
          </Link>
          <Link key ={'Search'} to={{pathname: `/Search`}}  className="Link-menu">    
@@ -182,8 +176,6 @@ export default function Sidebar() {
          </Link> 
 
         
-
-
         </List>
         
         <Divider />
