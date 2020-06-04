@@ -1,7 +1,7 @@
-import React, { Fragment,useEffect,useState } from 'react';
+import React, { Fragment,useEffect,useState,useContext } from 'react';
 //import {useDispatch,useSelector} from 'react-redux';
 import SideBar from './SideBar';
-import { Button,Container, FormGroup,Grid, Link } from '@material-ui/core';
+import { Button,Container, FormGroup,Grid, Link, TableHead } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -22,6 +22,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import {PatientsContext} from '../context/PatientsContext';
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
@@ -103,29 +104,46 @@ const useStyles1 = makeStyles(theme => ({
     },
   });
 
+  const useStyles3 = makeStyles(theme => ({
+    root: {
+      width: '70%',
+      '& > * + *': {
+        marginTop: theme.spacing(2), 
+      },
+    },
+  }));
 
 function Search(props){
-    const classes = useStyles();
-    //const dispatch=useDispatch();
-    const user='';
-    const error='';
-    const makes=[];
-    const models=[];
-    const [amountFrom,updateAmountFrom]=useState('');
-    const [amountTo,updateAmountTo]=useState('');
-    const [make,updateMake]=useState('');
-    const [model,updateModel]=useState('');
-    const [description,updateDescription]=useState('');
-    const ads =[];   
-    const getMakes=() =>{};
-    const getModels=(make) =>{};
-    const getAdverts=(user) =>{};    
-//prueba tabla
-    const classes2 = useStyles2();
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, ads.length - page * rowsPerPage);
+   const [patients,updatePatients]=useState([]);
+   const [name ,updateName ]=useState(null);
+   const [idNumber,updateIdNumber]=useState(null);
+   const [lastName,updateLastName]=useState(null);
+   const{getPatientsFunction}=useContext(PatientsContext);
+   //table
+   const classes2 = useStyles2();
+   const [page, setPage] = React.useState(0);
+   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+   const emptyRows = rowsPerPage - Math.min(rowsPerPage, patients.length - page * rowsPerPage);
+
+   useEffect(()=>{
+      
+      const fetchPatients=async(filter)=>{
+       const allPatients= await getPatientsFunction(filter);
+     //   console.log(allPatients);
+       updatePatients(allPatients);
+        return allPatients ;
+      }
+       fetchPatients();
+     // console.log(patientsArray);
+    },[])
+ 
+    const getPatients=async(filter)=>{
+      const allPatients= await getPatientsFunction(filter);
+      updatePatients(allPatients);
+      return allPatients ;
+     }
+    
 
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -135,130 +153,110 @@ function Search(props){
       setRowsPerPage(parseInt(event.target.value, 10));
       setPage(0);
     };
+ 
 
-    useEffect(()=>{
-        getMakes();
-        getAdverts({});
-    },[])
-    useEffect(()=>{
+    const classes3 = useStyles3();
 
-      getModels(make);
+    const changeName=(event)=>{
+      updateName(event.target.value);
+    }
 
-     },[make])
+    const changeIdNumber=(event)=>{
+      updateIdNumber(event.target.value);
+    }
+
+   // console.log(patients);
     return(
 
        <Fragment>
         <SideBar></SideBar> 
         <Container className="Container-Search">
+        <FormGroup className="Form">
         <h1>Search</h1>    
          <form
                     onSubmit={e=> {
                         e.preventDefault();
-                        let filter;
-                        if (make){
-                             filter={make:make};   
+                        let filter={};
+                        if (name){
+                              filter={name:name};   
                         }
-                        if(model){
-                             filter={...filter,model:model }
-                        }
-                        if(amountFrom && amountTo){ 
-                            filter={...filter,amountFrom:amountFrom,amountTo:amountTo }
-                        }
-                       getAdverts(filter);
-                       console.log(ads);
+                         if(idNumber){
+                              filter={...filter,idNumber:idNumber }
+                         }
+                         if(lastName){
+                          filter={...filter,lastName:lastName }
+                         }
+                         console.log(filter);
+                        getPatients(filter);
+ 
                        }
-                      }
+                      }  
           >
-         <FormGroup>
-          <FormControl className={classes.formControl}> 
-              <InputLabel id="demo-simple-select-label">Make</InputLabel>       
-                  <Select 
-                  name="make"
-                  onChange={e=>updateMake(e.target.value)}
-                  value={make}
-                  
-                  >
-                      <MenuItem key="default">---Select a make--- </MenuItem>
-                  {makes ? makes.map( make=>
-                      <MenuItem key={make.name} value={make.name} >{make.name}</MenuItem>
-                  ):''}   
-                  </Select>
-          </FormControl>       
-          <FormControl className={classes.formControl}> 
-              <InputLabel id="demo-simple-select-label">Model</InputLabel>              
-          {models.length>0 ?
-                  <Select 
-                  name="model"
-                  onChange={e=>updateModel(e.target.value)}
-                  value={model}
-                  >
-                      <MenuItem key="default">---Select a model---</MenuItem>
-                  {models.length>0 ? models.map( model=>
-                      <MenuItem key={model.name} value={model.name} >{model.name}</MenuItem>
-                  ):''}   
-                  </Select>
-                  :
-                  ''
-              }                
-            </FormControl>
 
-            <FormControl className="currencyGroupSearch">
-      
-        
-            <TextField className="amount-Search "
-                        type="number" 
-                        placeholder="Price from" 
-                        id="amount"
-                        value={amountFrom}
-                        onChange={e=>updateAmountFrom(e.target.value)}
-                        
-                  />
-              </FormControl>   
-              <FormControl>
-              <TextField className="amount-Search "
-                        type="number" 
-                        placeholder="Price until" 
-                        id="amount"
-                        value={amountTo}
-                        onChange={e=>updateAmountTo(e.target.value)}
-                        
-                  />
+       
+          <FormControl className="SearchText"> 
+              <TextField 
+                type="text" 
+                className="FormText"
+                id="name"
+                label="First Name"
+                variant="outlined"
+                size="small"
+                value={name}
+                onChange={e=>{updateName(e.target.value)}}
+              />
               </FormControl>
-        </FormGroup>
-          <Grid container justify="center">
-              <Button className="centerButton" type="submit" variant="contained" color="primary">    Go!   </Button>
+          <FormControl className="SearchText"> 
+              <TextField 
+                type="text" 
+                className="FormText"
+                id="name"
+                label="Last Name"
+                variant="outlined"
+                size="small"
+                value={lastName}
+                onChange={e=>{updateLastName(e.target.value)}}
+              />              
+          </FormControl>
+            <FormControl className="SearchText"> 
+              <TextField 
+                type="text" 
+                className="FormText"
+                id="idNumber"
+                label="Id Number"
+                variant="outlined"
+                size="small"
+                value={idNumber}
+                onChange={e=>{updateIdNumber(e.target.value)}}
+              />
+          </FormControl> 
+          <Grid container >                 
+              <Button className="searchButton" type="submit" variant="contained" color="primary">    Search   </Button>
           </Grid>
          </form>
+         </FormGroup>
         </Container>
         <Container className="SearchResults">
           <TableContainer component={Paper}>
             <Table className={classes2.table} aria-label="custom pagination table">
-              <TableBody>
-                {(ads.length > 0
-                  ? ads.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  : ads
-                ).map(ad => (
+            <TableBody>
+                {(patients.length > 0
+                  ? patients.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  : patients
+                ).map(patient => (
                 
 
-                  <TableRow key={ad._id} hover onClick={() => props.history.push('/detail/'+ad._id)} 
-                    state={ {adId:ad._id}}  >
-                    <TableCell>
-
-                    <img className="img-table" src={"https://carsdealshn.josueroque.com/images/" + ad.photo[0]} alt=""></img>
-                  
-                    </TableCell>
+                  <TableRow key={patient._id} hover onClick={() => props.history.push('/detail/'+patient._id)} 
+                    state={ {patientId:patient._id}}  >
                     
                     <TableCell >
-                    {ad.make+' '+ad.model+' '+ad.year}
+                    {patient.idNumber}
                     </TableCell>
                     <TableCell >
-                    {ad.transmition}
+                    {patient.name+' '+patient.lastName}
                     </TableCell>
                     <TableCell >
-                    {ad.city}
-                    </TableCell>
-                    <TableCell >
-                      {ad.currency} {ad.price}
+                    {patient.city}
                     </TableCell>
 
                   </TableRow>
@@ -276,7 +274,7 @@ function Search(props){
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                     colSpan={3}
-                    count={ads.length}
+                    count={patients.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
