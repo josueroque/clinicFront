@@ -178,13 +178,13 @@ function Search(props){
                         e.preventDefault();
                         let filter={};
                         if (name){
-                              filter={name:name};   
+                            filter={name:name};   
                         }
                          if(idNumber){
-                              filter={...filter,idNumber:idNumber }
+                            filter={...filter,idNumber:idNumber }
                          }
                          if(lastName){
-                          filter={...filter,lastName:lastName }
+                            filter={...filter,lastName:lastName }
                          }
                          console.log(filter);
                         getPatients(filter);
@@ -246,7 +246,7 @@ function Search(props){
                 ).map(patient => (
                 
 
-                  <TableRow key={patient._id} hover onClick={() => props.history.push('/detail/'+patient._id)} 
+                  <TableRow key={patient._id} hover onClick={() => props.history.push('/general/'+patient._id)} 
                     state={ {patientId:patient._id}}  >
                     
                     <TableCell >

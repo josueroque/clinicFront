@@ -16,6 +16,7 @@ h1{
     
     margin-top: 1vw !important; 
     text-align: center;
+    
 }
 
 .FormText{
@@ -35,8 +36,9 @@ h1{
 
 .centerButton{
     margin-top: 0vw !important;
-    width: 10vw;
+    width: 10vw !important;
     margin-left: 25vw !important;
+    display: inline !important;
   }
 
 .Loader{
@@ -69,7 +71,7 @@ h1{
 
 h3{
     text-align: center;
-    color: blue ;
+    color:$primary;
 }
 .FormNumber{
     width: 20vw;
@@ -81,9 +83,10 @@ h3{
     width: 15vw;
     margin-left: 1vw !important;
 }
+
 .HistoryTitle{
     margin-top: 5vw !important;
-    
+    color:$primary;
 }
 
 .RadioCondition{

@@ -97,7 +97,7 @@ export default function Sidebar() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [openNested, setOpenNested] = React.useState(false);
+  const [openNested, setOpenNested] = React.useState(true);
   const user=useState({token:'test'});
 
 
@@ -191,18 +191,22 @@ export default function Sidebar() {
             </ListItem>
             <Collapse in={openNested} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-              <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <Create />
-                  </ListItemIcon>
-                  <ListItemText primary="Create" />
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <Search />
-                  </ListItemIcon>
-                  <ListItemText primary="Search" />
-                </ListItem>
+                <Link key='Create' to={{pathname:`/general`}} className='Link-menu'>  
+                  <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <Create />
+                        </ListItemIcon>
+                        <ListItemText primary="Create" />
+                    </ListItem>
+                  </Link>
+                <Link key='Create' to={{pathname:`/search`}} className='Link-menu'>    
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <Search />
+                    </ListItemIcon>
+                    <ListItemText primary="Search" />
+                  </ListItem>
+                </Link>
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <Archive />

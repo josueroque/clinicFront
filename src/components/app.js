@@ -31,8 +31,9 @@ const theme = createMuiTheme({
                 <PatientsProvider>
                     <ThemeProvider theme={theme}>
                         <Route exact path='/patients' component={Patients}  />
+                        <Route exact path='/history/:id' component={History}  />
+                        <Route exact path='/general/:id' component={GeneralInfo}  />
                         <Route exact path='/general' component={GeneralInfo}  />
-                        <Route exact path='/history' component={History}  />
                         <Route exact path='/search' component={Search}  />
                         <Route exact path='/' component={Home}  />
                     </ThemeProvider>    

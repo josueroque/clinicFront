@@ -1,4 +1,5 @@
-import React,{useContext,useState, Fragment} from 'react';
+import React,{useContext,useState, Fragment, useEffect} from 'react';
+import{Link} from 'react-router-dom';
 import 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -28,10 +29,13 @@ const useStyles = makeStyles(theme => ({
 const GeneralInfo=(props)=>{
 
 const classes = useStyles();
+const [updating,updateUpdating]=useState(false);
 const [patient,updatePatient]=useState({});
+const [buttonLabel,updateBottonLabel]=useState('Save');
+const [_id,update_Id]=useState(null);
 const [idNumber,updateIdNumber]=useState('');
 const [name,updateName]=useState('');
-const [lastName,updateLastname]=useState('');
+const [lastName,updateLastName]=useState('');
 const [socialInsurance,updateSocialInsurance]=useState(false);
 const [address,updateAddress]=useState('');
 const [city,updateCity]=useState('');
@@ -46,34 +50,81 @@ const [errorStatus,updateErrorStatus]=useState(false);
 const [savedStatus,updateSavedStatus]=useState(false);
 
 const{savePatientFunction}=useContext(PatientsContext);
- 
+const{updatePatientFunction}=useContext(PatientsContext); 
+const{getPatientIdFunction}=useContext(PatientsContext);
+
+useEffect(()=>{
+  if (props.match.params.id){
+    updateUpdating(true);
+    update_Id(props.match.params.id);
+    updateBottonLabel('Update');
+    fetchPatient(props.match.params.id);        
+  }
+  else{
+    updateUpdating(false);
+    updateBottonLabel('Save');
+  }
+
+},[])
+
+useEffect(()=>{
+  
+  if(patient){
+ //   console.log(patient);
+     updateName(patient.name);
+     updateLastName(patient.lastName);
+     updateIdNumber(patient.idNumber);
+     updateSocialInsurance(patient.socialInsurance);
+     updateAddress(patient.address);
+     updateCity(patient.city);
+     updatePhone(patient.phone);
+     updateBirthday(patient.birthday);
+     updateMaritalStatus(patient.maritalStatus);
+     updateEducationLevel(patient.educationLevel);
+     updateControlPlace(patient.controlPlace);
+     updateChildBirthPlace(patient.childBirthPlace);
+  }
+  
+},[patient])
+
+const fetchPatient=async(_id)=>{
+  let fetchedPatient=await getPatientIdFunction({id:_id});
+  //console.log(fetchedPatient);
+  updatePatient(fetchedPatient);
+  return ;
+};
+
 const save=async(patient)=>{
    try{
+    console.log(updating); 
     updateLoading(true);
     updateErrorStatus(true);
     updateSavedStatus(false);
     await wait(1000);
     updateLoading(false);
     updateSavedStatus(true);
-    let response = await savePatientFunction(patient);
+    let response;
+     // console.log(patient);
+      if(!updating){
+
+         response = await savePatientFunction(patient);
+      }
+      else{
+        patient._id=_id;
+         response = await updatePatientFunction(patient);
+      }
     //console.log('desde save' + response);
     if (response.statusText==="OK") {
       updateErrorStatus(false);
     }
     await wait(1000);
 
-    // console.log( errorStatus);
-    // console.log( savedStatus);
-    // console.log( loading);
   }
     catch(error){
-     // console.log(response);
+      console.log(error);
       updateSavedStatus(true);
       updateErrorStatus(true);
 
-      // console.log( errorStatus);
-      // console.log( savedStatus);
-      // console.log( loading);
   }
 }
 
@@ -83,6 +134,8 @@ const wait=async(ms)=> {
   setTimeout(resolve, ms);
   });
 }
+
+
 return(
   <Fragment>
     <SideBar></SideBar>
@@ -153,7 +206,7 @@ return(
             variant="outlined" 
             size="small"
             value={lastName}
-            onChange={e=>updateLastname(e.target.value)}
+            onChange={e=>updateLastName(e.target.value)}
           />
         </FormControl> 
         <FormControl className={classes.formControl}> 
@@ -165,8 +218,8 @@ return(
               value={socialInsurance}
               onChange={e=>{updateSocialInsurance(e.target.value)}}
             >
-              <FormControlLabel  value = "true" control={<Radio />} label="Yes" />
-              <FormControlLabel value = "false" control={<Radio />} label="No" />
+              <FormControlLabel   control={<Radio value = {true}/>} label="Yes" />
+              <FormControlLabel   control={<Radio  value = {false}/>} label="No" />
             </RadioGroup>
          </FormControl> 
          <FormControl className={classes.formControl}> 
@@ -187,7 +240,8 @@ return(
                 <MenuItem className="column" key="default" value="default" >---Select municipality---</MenuItem>
                 <MenuItem key="San Pedro Sula" value="San Pedro Sula">San Pedro Sula</MenuItem>
                 <MenuItem key="Tegucigalpa" value="Tegucigalpa">Tegucigalpa</MenuItem>
-                </Select>
+                <MenuItem key="Danli" value="Danli">Danli</MenuItem>          
+          </Select>
         </FormControl> 
         <FormControl className={classes.formControl}> 
           <TextField
@@ -268,7 +322,10 @@ return(
 
  
       <Grid container justify="center">
-            <Button className="centerButton" type="submit" variant="contained" color="primary">    Save   </Button>
+            <Button className="centerButton" type="submit" variant="contained" color="primary">    {buttonLabel}  </Button>
+            <Link to={{pathname:`/history/`+patient._id}}  >
+              <Button  className="centerButton" type="submit" variant="contained" color="primary">       History                          </Button>
+            </Link>    
       </Grid>
     </form>
   }

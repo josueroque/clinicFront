@@ -1,4 +1,4 @@
-import React, { Fragment, useState,useContext } from 'react';
+import React, { Fragment, useState,useContext,useEffect } from 'react';
 //import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container,Grid,Button,FormControl,TextField,FormLabel,Typography,
@@ -26,32 +26,6 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-// function TabPanel(props) {
-//   const { children, value, index, ...other } = props;
-
-//   return (
-//     <div
-//       role="tabpanel"
-//       hidden={value !== index}
-//       id={`scrollable-force-tabpanel-${index}`}
-//       aria-labelledby={`scrollable-force-tab-${index}`}
-//       {...other}
-//     >
-//       {value === index && (
-//         <Box p={3}>
-//           <Typography>{children}</Typography>
-//         </Box>
-//       )}
-//     </div>
-//   );
-// }
-
-// TabPanel.propTypes = {
-//   children: PropTypes.node,
-//   index: PropTypes.any.isRequired,
-//   value: PropTypes.any.isRequired,
-// };
-
 function a11yProps(index) {
   return {
     id: `scrollable-force-tab-${index}`,
@@ -69,7 +43,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function History(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [buttonLabel,updateBottonLabel]=useState('Save');
+  const [updating,updateUpdating]=useState(false);
+  const [name,updateName]=useState('');
+  const [patient,updatePatient]=useState({});
+  const [_id,update_Id]=useState(null);
   const [idNumber,updateIdNumber]=useState("08011988411578");
   const [familyTcb,updateFamilyTcb]=useState(false);
   const [familyDiabetes,updateFamilyDiabetes]=useState(false);
@@ -110,12 +89,78 @@ export default function History(props) {
   const [errorStatus,updateErrorStatus]=useState(false);
   const [savedStatus,updateSavedStatus]=useState(false);
 
-  const{saveHistoryFunction}=useContext(PatientsContext);
+  const{saveHistoryFunction,getHistoryIdFunction,getPatientIdFunction,updateHistoryFunction}=useContext(PatientsContext);
+
+  useEffect(()=>{
+    if (props.match.params.id){
+     //console.log((props.match.params.id));
+      updateUpdating(true);
+      update_Id(props.match.params.id);
+      updateBottonLabel('Update');
+      fetchPatient(props.match.params.id);  
+
+    }
+    else{
+      props.history.push('/search');
+    }
+  
+  },[])
+  
+  useEffect(()=>{
+  //  console.log(patient);
+    if(patient){
+   // console.log(patient);
+     update_Id(patient._id); 
+     updateIdNumber(patient.idNumber);
+     updateFamilyTcb(patient.familyTcb);
+     updateFamilyDiabetes(patient.familyDiabetes);
+     updateFamilyHypertension(patient.familyHypertension);
+     updateFamilyPreeclampsia(patient.familyPreeclampsia);
+     updateFamilyEeclampsia(patient.familyEeclampssia);
+     updatePersonalTcb(patient.personalTcb);
+     updatePersonalDiabetes(patient.personalDiabetes);
+     updatePersonalHypertension(patient.personalHypertension);
+     updatePersonalPreeclampsia(patient.personalPreeclampsia);
+     updatePersonalEeclampsia(patient.personalEeclampssia);
+     updateSurgery(patient.surgery);
+     updateInfertility(patient.infertility);
+     updateHeartDicease(patient.heartDicease);
+     updateKidneyDicease(patient.kidneyDicease);
+     updateViolence(patient.violence);
+     updatePreviousGestation(patient.previousGestation);
+     updateAbortions(patient.abortions);
+     updateSpontaneousConsecutive(patient.spontaneousConsecutive);
+     updateDeliveries(patient.deliveries);
+     updateVaginal(patient.vaginal);
+     updateCesareans(patient.cesareans);
+     updateBornAlive(patient.bornAlive);
+     updateBornDead(patient.bornDead);
+     updateDeadFirstWeek(patient.deadAfterFirstWeek);
+     updateDeadAfterFirstWeek(patient.deadAfterFirstWeek);
+     updateStillAlive(patient.stillAlive);
+     updatePreviousWeight(patient.previousWeight);
+     updateTwinsHistory(patient.twinsHistory);
+     updateEndDate(patient.endDate);
+     updateTerminationCondition(terminationCondition);
+     updatePlannedPregnancy(plannedPregnancy);
+     updateContraceptiveMethod(contraceptiveMethod);
+
+    }
+    
+  },[patient])
+  
+  const fetchPatient=async(_id)=>{
+    let fetchedPatient=await getHistoryIdFunction({id:_id});
+    let patientGeneral= await getPatientIdFunction({id:_id});
+    updateName(patientGeneral.name+' '+patientGeneral.lastName )  
+    updatePatient(fetchedPatient);
+    return ;
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
+   
   
   const save=async(history)=>{
     try{
@@ -125,8 +170,18 @@ export default function History(props) {
         await wait(1000);
         updateLoading(false);
         updateSavedStatus(true);
-        let response = await saveHistoryFunction(history);
-        console.log('desde save' + response);
+      //  console.log(history);
+        let response;
+        if(!updating){
+
+          response =await saveHistoryFunction(history);
+       }
+       else{
+          history._id=_id;
+          response = await updateHistoryFunction(history);
+       }
+    //    let response = await saveHistoryFunction(history);
+      //  console.log('desde save' + response);
         if (response.statusText==="OK") {
           updateErrorStatus(false);
         }
@@ -148,12 +203,13 @@ export default function History(props) {
   });
 }
 
+
   return (
     <Fragment>
     <SideBar></SideBar>
     {/* <h1 className="HistoryTitle"> History </h1> */}
     <h1  className="HistoryTitle"> 
-        History 
+         {'History '+name}
       </h1>
     <Container className="Container-History">
     <div className={classes.root}>
@@ -161,7 +217,7 @@ export default function History(props) {
     <form className={classes.root} noValidate autoComplete="off"
       onSubmit={ e=>{
         e.preventDefault();
-        
+        console.log(familyTcb);
         const history={
           idNumber,
           familyTcb,
@@ -197,7 +253,7 @@ export default function History(props) {
           plannedPregnancy,
           contraceptiveMethod
         }
-        
+        //console.log(history);
         save (history);
         
       }
@@ -231,27 +287,28 @@ export default function History(props) {
             <h3>Family</h3>
                 <FormGroup >
                   <FormControlLabel
-                    control={<Checkbox value={familyTcb} onChange={e=>{updateFamilyTcb(e.target.value)}} />}
+                    key="familyTCB"
+                    control={<Checkbox checked ={familyTcb}  onChange={e=>{updateFamilyTcb(e.target.checked)}} />}
                     label="TBC"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox value={familyDiabetes}  onChange={e=>{updateFamilyDiabetes(e.target.value)}}  />}
+                    control={<Checkbox checked={familyDiabetes}  onChange={e=>{updateFamilyDiabetes(e.target.checked)}}  />}
                     label="Diabetes"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox  value={familyHypertension} onChange={e=>{updateFamilyHypertension(e.target.value)}}  />}
+                    control={<Checkbox  checked={familyHypertension} onChange={e=>{updateFamilyHypertension(e.target.checked)}}  />}
                     label="Hypertension"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox  value={familyPreeclampsia} onChange={e=>{updateFamilyPreeclampsia(e.target.value)}}  />}
+                    control={<Checkbox  checked={familyPreeclampsia} onChange={e=>{updateFamilyPreeclampsia(e.target.checked)}}  />}
                     label="Preeclampsia"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox value={familyEeclampssia} onChange={e=>{updateFamilyEeclampsia(e.target.value)}}  />}
+                    control={<Checkbox checked={familyEeclampssia} onChange={e=>{updateFamilyEeclampsia(e.target.checked)}}  />}
                     label="Eeclampsia"
                     labelPlacement="start"
                   />                                                                        
@@ -261,27 +318,27 @@ export default function History(props) {
             <h3>Personal</h3>
                 <FormGroup >
                   <FormControlLabel
-                    control={<Checkbox value={personalTcb} onChange={e=>{updatePersonalTcb(e.target.value)}}  />}
+                    control={<Checkbox checked={personalTcb} onChange={e=>{updatePersonalTcb(e.target.checked)}}  />}
                     label="TBC"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox value={personalDiabetes} onChange={e=>{updatePersonalDiabetes(e.target.value)}} />}
+                    control={<Checkbox checked={personalDiabetes} onChange={e=>{updatePersonalDiabetes(e.target.checked)}} />}
                     label="Diabetes"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox value={personalHypertension} onChange={e=>{updatePersonalHypertension(e.target.value)}}   />}
+                    control={<Checkbox checked={personalHypertension} onChange={e=>{updatePersonalHypertension(e.target.checked)}}   />}
                     label="Hypertension"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox  value={personalPreeclampsia} onChange={e=>{updatePersonalPreeclampsia(e.target.value)}}  />}
+                    control={<Checkbox  checked={personalPreeclampsia} onChange={e=>{updatePersonalPreeclampsia(e.target.checked)}}  />}
                     label="Preeclampsia"
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    control={<Checkbox value={personalEeclampssia} onChange={e=>{updatePersonalEeclampsia(e.target.value)} }  />}
+                    control={<Checkbox checked={personalEeclampssia} onChange={e=>{updatePersonalEeclampsia(e.target.checked)} }  />}
                     label="Eeclampsia"
                     labelPlacement="start"
                   /> 
@@ -291,27 +348,27 @@ export default function History(props) {
                 <br></br> 
                 <FormGroup >
                   <FormControlLabel
-                    control={<Checkbox   value={surgery} onChange={e=>{updateSurgery(e.target.value)}} />}
+                    control={<Checkbox   checked={surgery} onChange={e=>{updateSurgery(e.target.checked)}} />}
                     label="Surgery"
                     labelPlacement="start"
                   /> 
                   <FormControlLabel
-                    control={<Checkbox value={infertility} onChange={e=>{updateInfertility(e.target.value)}}  />}
+                    control={<Checkbox checked={infertility} onChange={e=>{updateInfertility(e.target.checked)}}  />}
                     label="Infertility"
                     labelPlacement="start"
                   /> 
                   <FormControlLabel
-                    control={<Checkbox value={heartDicease} onChange={e=>{updateHeartDicease(e.target.value)}}   />}
+                    control={<Checkbox checked={heartDicease} onChange={e=>{updateHeartDicease(e.target.checked)}}   />}
                     label="Heart disease"
                     labelPlacement="start"
                   /> 
                   <FormControlLabel
-                    control={<Checkbox value={kidneyDicease} onChange={e=>{updateKidneyDicease(e.target.value)}}   />}
+                    control={<Checkbox checked={kidneyDicease} onChange={e=>{updateKidneyDicease(e.target.checked)}}   />}
                     label="Kidney disease"
                     labelPlacement="start"
                   /> 
                   <FormControlLabel
-                    control={<Checkbox value={violence} onChange={e=>{updateViolence(e.target.value)}}   />}
+                    control={<Checkbox checked={violence} onChange={e=>{updateViolence(e.target.checked)}}   />}
                     label="Violence"
                     labelPlacement="start"
                   />
@@ -348,7 +405,7 @@ export default function History(props) {
                       />
                 </FormControl> 
                 <FormControlLabel
-                    control={<Checkbox value={spontaneousConsecutive} onChange={e=>{updateSpontaneousConsecutive(e.target.value)}}  />}
+                    control={<Checkbox checked={spontaneousConsecutive} onChange={e=>{updateSpontaneousConsecutive(e.target.checked)}}  />}
                     label="3 Spontaneous Consecutive"
                     labelPlacement="start"
                     className="CenteredCheck"
@@ -545,7 +602,7 @@ export default function History(props) {
       </TabPanel>
         <Grid container justify="center">
             <ButtonGroup>
-              <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Save   </Button>
+              <Button className="HistoryButton" type="submit" variant="contained" color="primary">    {buttonLabel}   </Button>
               <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Actual Gestation   </Button>
             </ButtonGroup>                
         </Grid>

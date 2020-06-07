@@ -1,11 +1,16 @@
 import React, {createContext,useState,useEffect} from 'react';
-import{savePatient,saveHistory,getPatients} from '../services/ApiService';
+import{savePatient,saveHistory,getPatients
+        ,getPatientId, updatePatient, getHistoryId
+        ,updateHistory} from '../services/ApiService';
 
 export const PatientsContext=createContext();
 export const savePatientFunction=savePatient;
 export const saveHistoryFunction=saveHistory;
 export const getPatientsFunction=getPatients;
-
+export const updatePatientFunction=updatePatient;
+export const getPatientIdFunction=getPatientId;
+export const getHistoryIdFunction=getHistoryId;
+export const updateHistoryFunction=updateHistory;
 const PatientsProvider=(props)=>{
     
    
@@ -14,7 +19,11 @@ const PatientsProvider=(props)=>{
        value={{
            savePatientFunction,
            saveHistoryFunction,
-           getPatientsFunction
+           getPatientsFunction,
+           updatePatientFunction,
+           getPatientIdFunction,
+           getHistoryIdFunction,
+           updateHistoryFunction
        }}
        >
            {props.children}
