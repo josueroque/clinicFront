@@ -1,5 +1,5 @@
 import axios from 'axios';
-const apiUrl='http://localhost:3001/apiv1/';
+const apiUrl='https://clinic.josueroque.com/apiv1/';
 
 export async function saveUser(user){  
     try {
