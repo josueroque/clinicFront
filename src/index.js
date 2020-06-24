@@ -1,8 +1,9 @@
 import React from 'react';
 import {render} from 'react-dom';
 import App from './components/App';
+import regeneratorRuntime from "regenerator-runtime";
 import './content.scss';
-import regeneratorRuntime from 'regenerator-runtime';
+
 import{creatMuiTheme, createMuiTheme} from "@material-ui/core/styles"
 import{ThemeProvider} from "@material-ui/styles"
 //import Demo from '../demo'

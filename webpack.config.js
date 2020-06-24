@@ -4,13 +4,20 @@ const {CleanWebpackPlugin}=require('clean-webpack-plugin');
 const webpack=require('webpack');
 module.exports={
     devtool:'sorce-map',
-    entry:'./src/index.js', 
+ //   entry:'./src/index.js', 
+    entry: {
+      app: [
+        'react-app-polyfill/ie9', // Only if you want to support IE 9
+        'react-app-polyfill/stable',
+        './src/index.js',
+      ],
+    },
     output:{
         path:path.join(__dirname,'dist'),
         filename:'bundle.js',
         publicPath: '/'
     },
-    devServer:{
+    devServer:{ 
         port:4000,
         historyApiFallback: true,
         // contentBase: './',
@@ -62,5 +69,6 @@ module.exports={
 //        new CleanWebpackPlugin(),
 
     ],
+
 
 }

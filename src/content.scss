@@ -35,11 +35,12 @@ h1{
 }
 
 .centerButton{
-    margin-top: 0vw !important;
+    margin-top: 2vw !important;
     width: 10vw !important;
     margin-left: 25vw !important;
-    display: inline !important;
+ //   display: inline !important;
   }
+
 
 .Loader{
     margin-left: 48vw;
@@ -119,4 +120,33 @@ h3{
     margin-top: 2vw !important;
     width: 10vw;
     margin-left: 0vw !important;
+  }
+
+  .loginContainer{
+    margin-top: 15vw;
+    width: 50% !important;
+  }
+
+  button.login {
+    background-color: #4CAF50;
+    color: white;
+    
+    margin-top: 5vw;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  h1.login{
+    margin-top: 4vw;
+     text-align: center;
+     color: $primary;
+   }
+
+   .centerButton.login{
+    margin-top: 2vw !important;
+    width: 10vw !important;
+    margin-left: 0vw !important;
+    background-color:  $primary !important;
+ //   display: inline !important;
   }

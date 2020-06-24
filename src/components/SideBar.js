@@ -1,4 +1,4 @@
-import React,{Fragment,useState} from 'react';
+import React,{Fragment,useState,useContext} from 'react';
 import clsx from 'clsx';
 import {Link} from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -32,8 +32,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
-const drawerWidth = 240;
+import {PatientsContext} from '../context/PatientsContext';
+import {UsersContext} from '../context/UsersContext';
 
+const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -93,13 +95,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [openNested, setOpenNested] = React.useState(true);
-  const user=useState({token:'test'});
-
+  const {auth}=useContext(UsersContext);
+  const user=useState(auth.user);
+  const{logoutFunction}=useContext(UsersContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -141,11 +144,7 @@ export default function Sidebar() {
           </Typography>
           </Link>
         
-         {/* <Button color="inherit" className="RightMenu">Sign in</Button> 
-         <Button color="inherit" >Register</Button> */}
-         {/* <Link to={ {pathname: `/Search`}} className="Link RightMenu" >           
-            <Button color="inherit" >Search</Button> 
-         </Link> */}
+
         </Toolbar>
       </AppBar>
       <Drawer
@@ -165,23 +164,14 @@ export default function Sidebar() {
         <Divider />
         <List>
     
-         <Link key ={'Login'} to={user.token? {pathname: `/Login`}:{pathname: `/Logout`}}  className="Link-menu"  onClick={user.token ?  ()=>logOut(user) :()=>{}}>  
+         <Link key ={'Login'} to={auth.token? {pathname: `/Login`}:{pathname: `/Logout`}}  className="Link-menu"  onClick={auth.token ?  ()=>logoutFunction({}) :()=>{}}>  
             <ListItem button  >
                 <ListItemIcon>
                   <LockOpen />
                 </ListItemIcon>
-                <ListItemText primary={!user.token ? 'Login':'Logout'} />
+                <ListItemText primary={!auth.token ? 'Login':'Logout'} />
             </ListItem>
           </Link>
-          {/* <Link key ={'Patients'} to={{pathname: `/patients`}}  className="Link-menu">    
-            <ListItem button  >
-              <ListItemIcon>
-                <AssignmentInd />
-              </ListItemIcon>
-              <ListItemText primary='Patients' />
-            </ListItem>
-         </Link> */}
-         {/* <Link key ={'Search'} to={{pathname: `/Search`}}  className="Link-menu">     */}
             <ListItem button button onClick={handleClick}  >
               <ListItemIcon>
                 <AssignmentInd />
@@ -207,13 +197,14 @@ export default function Sidebar() {
                     <ListItemText primary="Search" />
                   </ListItem>
                 </Link>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <Archive />
-                  </ListItemIcon>
-                  <ListItemText primary="General Information" />
-                </ListItem>
-                                      
+                {/* <Link key='Create' to={{pathname:`/general`}} className='Link-menu' >                  
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <Archive />
+                    </ListItemIcon>
+                    <ListItemText primary="General Information" />
+                  </ListItem>
+                </Link>                                      
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <FolderOpen />
@@ -225,7 +216,7 @@ export default function Sidebar() {
                     <PregnatWoman />
                   </ListItemIcon>
                   <ListItemText primary="Actual Gestation" />
-                </ListItem>                                
+                </ListItem>                                 */}
 
               </List>
             </Collapse>            
@@ -235,20 +226,7 @@ export default function Sidebar() {
         </List>
         
         <Divider />
-        {user.token ?    
-        <List>
 
-          {['Create ad', 'View list','My favorites','Deactivate account'].map((text, index) => (
-         <Link key={text} to={ {pathname: `/${text.replace(/\s/g,'')}`}}  className="Link-menu" >           
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> :  <ExitToApp/>}</ListItemIcon>
-              <ListItemText primary={text}/>
-            </ListItem>
-            </Link>
-          ))}
-        </List>
-                  :''
-        }
       </Drawer>
 
     </div>

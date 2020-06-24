@@ -1,9 +1,11 @@
-import React,{Fragment} from 'react';
+import React,{Fragment,useContext} from 'react';
 import SideBar from './SideBar';
 import { Container } from '@material-ui/core';
-
+import {UsersContext} from '../context/UsersContext'; 
 const Home=(props)=>{
-
+    const {auth}=useContext(UsersContext);
+    
+    console.log(auth);
     return(
         
         <Fragment>

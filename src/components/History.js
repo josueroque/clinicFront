@@ -21,6 +21,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import {PatientsContext} from '../context/PatientsContext';
 import Loader from './Loader';
 import TabPanel from './TabPanel';
+import requireAuth from './requireAuth'; 
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function History(props) {
+  function History(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [buttonLabel,updateBottonLabel]=useState('Save');
@@ -109,7 +110,7 @@ export default function History(props) {
   useEffect(()=>{
   //  console.log(patient);
     if(patient){
-   // console.log(patient);
+    //console.log(patient.plannedPregnancy);
      update_Id(patient._id); 
      updateIdNumber(patient.idNumber);
      updateFamilyTcb(patient.familyTcb);
@@ -141,9 +142,9 @@ export default function History(props) {
      updatePreviousWeight(patient.previousWeight);
      updateTwinsHistory(patient.twinsHistory);
      updateEndDate(patient.endDate);
-     updateTerminationCondition(terminationCondition);
-     updatePlannedPregnancy(plannedPregnancy);
-     updateContraceptiveMethod(contraceptiveMethod);
+     updateTerminationCondition(patient.terminationCondition);
+     updatePlannedPregnancy(patient.plannedPregnancy);
+     updateContraceptiveMethod(patient.contraceptiveMethod);
 
     }
     
@@ -546,9 +547,9 @@ export default function History(props) {
                  value={terminationCondition}
                   onChange={e=>{updateTerminationCondition(e.target.value)}}
                 >
-                  <FormControlLabel  value = "normal" control={<Radio />} label="Normal" />
-                  <FormControlLabel value = "cesarean" control={<Radio />} label="Cesarean" />
-                  <FormControlLabel value = "abortion" control={<Radio />} label="Abortion" />
+                  <FormControlLabel   control={<Radio value = "normal" />} label="Normal" />
+                  <FormControlLabel  control={<Radio value = "cesarean" />} label="Cesarean" />
+                  <FormControlLabel  control={<Radio value = "abortion" />} label="Abortion" />
 
                 </RadioGroup>
               </FormControl> 
@@ -578,8 +579,8 @@ export default function History(props) {
                   value={plannedPregnancy}
                   onChange={e=>{updatePlannedPregnancy(e.target.value)}}
                 >
-                  <FormControlLabel  value = "true" control={<Radio />} label="Yes" />
-                  <FormControlLabel value = "false" control={<Radio />} label="No" />
+                  <FormControlLabel   control={<Radio value = {true} />} label="Yes" />
+                  <FormControlLabel  control={<Radio value = {false} />} label="No" />
 
                 </RadioGroup>
               </FormControl> 
@@ -615,3 +616,4 @@ export default function History(props) {
     </Fragment>
   );
 }
+export default requireAuth( History);

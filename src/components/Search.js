@@ -23,6 +23,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import {PatientsContext} from '../context/PatientsContext';
+import requireAuth from './requireAuth';
+
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
@@ -296,4 +298,4 @@ function Search(props){
     )
 }
 
-export default Search;
+export default requireAuth( Search);

@@ -4,14 +4,17 @@ import 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { FormGroup,FormControl,RadioGroup,FormControlLabel,Button,
-        Radio,FormLabel,Select,MenuItem,InputLabel,Grid } from '@material-ui/core';
+        Radio,FormLabel,Select,MenuItem,InputLabel,Grid, ButtonGroup } from '@material-ui/core';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';  
-import SideBar from './SideBar';       
+import SideBar from './SideBar';
+import requireAuth from './requireAuth';       
 import {PatientsContext} from '../context/PatientsContext';
+import {UsersContext} from '../context/UsersContext'; 
 import Loader from './Loader';
+
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -27,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GeneralInfo=(props)=>{
-
+const {auth}=useContext(UsersContext);
 const classes = useStyles();
 const [updating,updateUpdating]=useState(false);
 const [patient,updatePatient]=useState({});
@@ -322,10 +325,12 @@ return(
 
  
       <Grid container justify="center">
+        <ButtonGroup>
             <Button className="centerButton" type="submit" variant="contained" color="primary">    {buttonLabel}  </Button>
-            <Link to={{pathname:`/history/`+patient._id}}  >
-              <Button  className="centerButton" type="submit" variant="contained" color="primary">       History                          </Button>
-            </Link>    
+            <Link to={{pathname:`/history/`+patient._id}} className="Link HistoryButton" >
+              <Button  className="centerButton HistoryButton" type="submit" variant="contained" color="primary">       History                          </Button>
+            </Link> 
+        </ButtonGroup>       
       </Grid>
     </form>
   }
@@ -336,4 +341,4 @@ return(
 
 }
 
-export default GeneralInfo;
+export default requireAuth( GeneralInfo);

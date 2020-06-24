@@ -1,6 +1,48 @@
 import axios from 'axios';
 const apiUrl='http://localhost:3001/apiv1/';
 
+export async function saveUser(user){  
+    try {
+         
+       const requestUrl =apiUrl +'/authenticate/register';
+  
+       const response = await axios.post(requestUrl, user );
+       if (response.statusText!=="OK") {
+         throw new Error('Error saving user');
+       }
+ 
+       return response; 
+      
+   }
+   catch(error){
+       console.log(error.response);
+       throw error.response;
+   }
+ }
+ 
+ export async function loginUser(user){  
+   try {
+     
+      const requestUrl =apiUrl +'authenticate';
+      // console.log('desde login')
+      // console.log(requestUrl);
+      // console.log(user);
+   const response = await axios.post(requestUrl, user);
+      if (response.statusText!=="OK") {
+        throw new Error('Error saving user');
+      }
+      // console.log('desde api');
+      // console.log (response);
+      return response.data; 
+     
+  }
+  catch(error){
+      console.error(error.response);
+      throw error;
+  }
+ }
+ 
+
 export async function updateHistory(history){
     try {   
         const requestUrl=apiUrl+'history/'+history._id;
