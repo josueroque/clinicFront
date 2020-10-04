@@ -1,6 +1,6 @@
 import axios from 'axios';
-const apiUrl='https://clinic.josueroque.com/apiv1/';
-
+//const apiUrl='https://clinic.josueroque.com/apiv1/';
+const apiUrl='http://localhost:3002/apiv1/';
 export async function saveUser(user){  
     try {
          
@@ -69,10 +69,10 @@ export async function updateHistory(history){
 export async function getHistoryId(patient){
     try {
       
-      let requestUrl=apiUrl+'history/'+patient.id;  
-    //   console.log('desde api');
+      let requestUrl=apiUrl+'history/'+patient._id;  
+       console.log('desde getHistory');
     //   console.log(patient);
-    //   console.log(requestUrl); 
+      console.log(requestUrl); 
       const response=await axios.get(requestUrl);
       //console.log(response);
       if (response.statusText!=="OK") {
@@ -93,11 +93,11 @@ export async function getPatientId(patient){
     try {
       
       let requestUrl=apiUrl+'patients?_id='+patient.id;  
-    //   console.log('desde getPatientId');
+      console.log('desde getPatientId');
     //   console.log(patient);
-    //   console.log(requestUrl); 
+       console.log(requestUrl); 
       const response=await axios.get(requestUrl);
-
+      console.log(response);
       if (response.statusText!=="OK") {
         throw new Error('Error fetching patient');
         //return {state:'errored',message:'Error saving patient'};

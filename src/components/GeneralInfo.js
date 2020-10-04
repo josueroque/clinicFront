@@ -4,7 +4,7 @@ import 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { FormGroup,FormControl,RadioGroup,FormControlLabel,Button,
-        Radio,FormLabel,Select,MenuItem,InputLabel,Grid, ButtonGroup } from '@material-ui/core';
+        Radio,FormLabel,Select,MenuItem,InputLabel,Grid, ButtonGroup, Container } from '@material-ui/core';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -39,7 +39,7 @@ const [_id,update_Id]=useState(null);
 const [idNumber,updateIdNumber]=useState('');
 const [name,updateName]=useState('');
 const [lastName,updateLastName]=useState('');
-const [socialInsurance,updateSocialInsurance]=useState(false);
+const [socialInsurance,updateSocialInsurance]=useState("false");
 const [address,updateAddress]=useState('');
 const [city,updateCity]=useState('');
 const [phone,updatePhone]=useState('');
@@ -61,7 +61,9 @@ useEffect(()=>{
     updateUpdating(true);
     update_Id(props.match.params.id);
     updateBottonLabel('Update');
-    fetchPatient(props.match.params.id);        
+    fetchPatient(props.match.params.id);  
+    console.log('props'); 
+    console.log(props);     
   }
   else{
     updateUpdating(false);
@@ -77,7 +79,10 @@ useEffect(()=>{
      updateName(patient.name);
      updateLastName(patient.lastName);
      updateIdNumber(patient.idNumber);
-     updateSocialInsurance(patient.socialInsurance);
+     console.log(patient);
+     console.log(patient.socialInsurance);
+     patient.socialInsurance===true?updateSocialInsurance("true"):updateSocialInsurance("false");
+    // updateSocialInsurance(patient.socialInsurance);
      updateAddress(patient.address);
      updateCity(patient.city);
      updatePhone(patient.phone);
@@ -90,12 +95,19 @@ useEffect(()=>{
   
 },[patient])
 
+const updateSocialInsuranceFunction=function(event){
+  console.log(socialInsurance);
+  updateSocialInsurance(event.target.value);
+}
+
 const fetchPatient=async(_id)=>{
   let fetchedPatient=await getPatientIdFunction({id:_id});
   //console.log(fetchedPatient);
   updatePatient(fetchedPatient);
   return ;
 };
+
+
 
 const save=async(patient)=>{
    try{
@@ -137,14 +149,22 @@ const wait=async(ms)=> {
   setTimeout(resolve, ms);
   });
 }
-
+console.log('desde render');
+console.log(socialInsurance);
 
 return(
   <Fragment>
     <SideBar></SideBar>
     <h1> General Information </h1>
- 
+    <div>   
+      { savedStatus===true?
+        <Alert severity={errorStatus===true?'error':'success'}>{errorStatus===true ? 'An error occured, please check your data':'Patient Information has been saved succefully!'}</Alert>
+        :''  
+      }
+    </div>
     {loading===true?<Loader></Loader>: 
+
+    
     <form className={classes.root} noValidate autoComplete="off"
       onSubmit={ e=>{
         e.preventDefault();
@@ -171,17 +191,12 @@ return(
       }
     >
       
-      <FormGroup className="Form">
-      <FormControl className={classes.formControl}>   
-      { savedStatus===true?
-        <Alert severity={errorStatus===true?'error':'success'}>{errorStatus===true ? 'An error occured, please check your data':'Advert saved succefully!'}</Alert>
-        :''  
-      }
-      </FormControl>
+      <FormGroup className="Form-General">
+        <Container>
         <FormControl className={classes.formControl}> 
             <TextField 
-              type="number" 
-              className="FormText"
+              type="text" 
+              className="FormTextGeneral"
               id="idNumber"
               label="Id Number"
               variant="outlined"
@@ -192,7 +207,7 @@ return(
         </FormControl> 
         <FormControl className={classes.formControl}> 
             <TextField
-              className="FormText"
+              className="FormTextGeneral"
               id="firtsName"
               label="First Name"
               variant="outlined"
@@ -203,7 +218,7 @@ return(
         </FormControl> 
         <FormControl className={classes.formControl}> 
           <TextField 
-            className="FormText"
+            className="FormTextGeneral"
             id="lastName" 
             label="Last Name"
             variant="outlined" 
@@ -213,21 +228,25 @@ return(
           />
         </FormControl> 
         <FormControl className={classes.formControl}> 
-            <FormLabel className="RadioLabel" component="legend">Social Security?</FormLabel>
-            <RadioGroup 
-              className="RadioSocialSec"
-              aria-label="socialSec" 
-              name="socialSec"
-              value={socialInsurance}
-              onChange={e=>{updateSocialInsurance(e.target.value)}}
-            >
-              <FormControlLabel   control={<Radio value = {true}/>} label="Yes" />
-              <FormControlLabel   control={<Radio  value = {false}/>} label="No" />
-            </RadioGroup>
+            <FormLabel className="RadioLabel FormTextGeneral" component="legend">Social Security?</FormLabel>
+            {socialInsurance?
+              <RadioGroup 
+                className="RadioSocialSec FormTextGeneral"
+                aria-label="socialSec" 
+                name="socialSec"
+                value={socialInsurance}
+                onChange={updateSocialInsuranceFunction}
+              >
+                
+                <FormControlLabel  value = "true" control={<Radio />} label="Yes" />
+                <FormControlLabel value = "false"  control={<Radio  />} label="No" />
+            
+              </RadioGroup>
+            :''}
          </FormControl> 
          <FormControl className={classes.formControl}> 
           <TextField 
-            className="FormText" 
+            className="FormTextGeneral" 
             id="address" 
             label="Address" 
             variant="outlined" 
@@ -237,18 +256,20 @@ return(
             onChange={e=>{updateAddress(e.target.value)}}
             />
         </FormControl> 
-        <FormControl className={classes.formControl}> 
-          <InputLabel id="demo-simple-select-label">Municipality</InputLabel>
-          <Select  name="city" required value={city} onChange={e=>{updateCity(e.target.value)}}  >
+        <FormControl className={classes.formControl,"ListInfo"}> 
+          <InputLabel id="demo-simple-select-label" className="ListLabel">Municipality</InputLabel>
+          <Select  name="city" required value={city} onChange={e=>{updateCity(e.target.value)}} className="FormTextGeneral" >
                 <MenuItem className="column" key="default" value="default" >---Select municipality---</MenuItem>
                 <MenuItem key="San Pedro Sula" value="San Pedro Sula">San Pedro Sula</MenuItem>
                 <MenuItem key="Tegucigalpa" value="Tegucigalpa">Tegucigalpa</MenuItem>
                 <MenuItem key="Danli" value="Danli">Danli</MenuItem>          
           </Select>
         </FormControl> 
+        </Container>
+        <Container>
         <FormControl className={classes.formControl}> 
           <TextField
-            className="FormText"
+            className="FormTextGeneral"
             id="phoneNumber" 
             label="Phone number"
             variant="outlined"
@@ -260,11 +281,12 @@ return(
         <FormControl className={classes.formControl}> 
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container justify="left">
-              <KeyboardDatePicker
+              <KeyboardDatePicker 
+                className="FormTextGeneral"
                 margin="normal"
                 id="date-picker-dialog"
                 label="Date picker dialog"
-                format="MM/dd/yyyy"
+                format="dd/MM/yyyy"
                 value={birthday}
                 onChange={updateBirthday}
                 KeyboardButtonProps={{
@@ -274,12 +296,14 @@ return(
             </Grid>
           </MuiPickersUtilsProvider>
         </FormControl>
-        <FormControl className={classes.formControl}> 
-          <InputLabel id="maritalStatus">Marutal Status</InputLabel>
+        <FormControl className={classes.formControl,"ListInfo"}> 
+          <InputLabel id="demo-simple-select-label" className="ListLabel">Marital Status</InputLabel>
           <Select 
             name="maritalStatus" 
             required value={maritalStatus}
             onChange={e=>{updateMaritalStatus(e.target.value)}}
+             className="FormTextGeneral"
+            
           >
                 <MenuItem className="column" key="default" value="default" >---Select option---</MenuItem>
                 <MenuItem key="Married" value="none">Married</MenuItem>
@@ -289,9 +313,9 @@ return(
 
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}> 
-          <InputLabel id="demo-simple-select-label">Education Level</InputLabel>
-          <Select  name="educationLevel" required value={educationLevel} onChange={e=>{updateEducationLevel(e.target.value)}} >
+        <FormControl className={classes.formControl,"ListInfo"}> 
+          <InputLabel id="demo-simple-select-label" className="ListLabel" >Education Level</InputLabel>
+          <Select className="FormTextGeneral" name="educationLevel" required value={educationLevel} onChange={e=>{updateEducationLevel(e.target.value)}} className="FormTextGeneral">
                 <MenuItem className="column" key="default" value="default" >---Select level---</MenuItem>
                 <MenuItem key="none" value="none">None</MenuItem>
                 <MenuItem key="basic" value="basic">Basic</MenuItem>
@@ -301,7 +325,7 @@ return(
         </FormControl>
         <FormControl className={classes.formControl}> 
           <TextField 
-            className="FormText"
+            className="FormTextGeneral"
             id="controlPlace"
             label="Control Place"
             variant="outlined"
@@ -312,7 +336,7 @@ return(
         </FormControl>           
         <FormControl className={classes.formControl}> 
           <TextField 
-            className="FormText"
+            className="FormTextGeneral"
             id="childBirthPlace"
             label="Child Birth Place"
             variant="outlined"
@@ -320,7 +344,8 @@ return(
             value={childBirthPlace}
             onChange={e=>{updateChildBirthPlace(e.target.value)}}    
           />
-        </FormControl>           
+        </FormControl>
+        </Container>           
       </FormGroup>
 
  
@@ -341,4 +366,5 @@ return(
 
 }
 
-export default requireAuth( GeneralInfo);
+//export default requireAuth( GeneralInfo);
+export default  GeneralInfo;

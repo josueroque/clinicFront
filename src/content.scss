@@ -7,10 +7,19 @@ body{
     background-color: $primary;
 }
 
+.Form-General{
+    margin-left: 12vw;
+    margin-top: 3vw;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+
+}
+
 .Form{
     margin-left: 30vw;
     margin-top: 1vw;
 }
+
 
 h1{
     
@@ -31,7 +40,7 @@ h1{
     width: 50% !important;
     display: grid !important;
     grid-template-columns: 1fr 1fr;
-
+    margin-top: 2vw !important;
 }
 
 .centerButton{
@@ -86,7 +95,7 @@ h3{
 }
 
 .HistoryTitle{
-    margin-top: 5vw !important;
+    margin-top: 6vw !important;
     color:$primary;
 }
 
@@ -150,3 +159,33 @@ h3{
     background-color:  $primary !important;
  //   display: inline !important;
   }
+
+  .loginMenu{
+      margin-left: 1.5vw;
+  }
+
+  .HomeImage{
+      margin-left: 15vw;
+      margin-top: 5vw;
+      max-width: 100%;
+      max-height: 100%;
+  }
+ 
+  .FormTextGeneral{
+      margin-top: 0.5vw !important;
+      width: 25vw  ;
+      display: block;
+      margin-left: 5vw !important;
+   }
+   .ListInfo{
+       margin-top: 1.5vw !important;
+       margin-bottom: 1.5vw !important;
+
+   }
+
+   .ListLabel{
+       margin-top: -0.5vw;
+    width: 25vw  ;
+    display: block;
+    margin-left: 5vw !important;
+ }

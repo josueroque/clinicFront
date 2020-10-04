@@ -298,4 +298,5 @@ function Search(props){
     )
 }
 
-export default requireAuth( Search);
+//export default requireAuth( Search);
+export default Search;

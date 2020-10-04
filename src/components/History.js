@@ -1,5 +1,4 @@
 import React, { Fragment, useState,useContext,useEffect } from 'react';
-//import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container,Grid,Button,FormControl,TextField,FormLabel,Typography,
         RadioGroup,Radio,InputLabel,Select,MenuItem, ButtonGroup } from '@material-ui/core';
@@ -9,8 +8,6 @@ import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-//import Typography from '@material-ui/core/Typography';
-//import Box from '@material-ui/core/Box';
 import SideBar from './SideBar';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,6 +18,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import {PatientsContext} from '../context/PatientsContext';
 import Loader from './Loader';
 import TabPanel from './TabPanel';
+import{Link} from 'react-router-dom';
 import requireAuth from './requireAuth'; 
 
 function Alert(props) {
@@ -98,7 +96,11 @@ const useStyles = makeStyles((theme) => ({
       updateUpdating(true);
       update_Id(props.match.params.id);
       updateBottonLabel('Update');
-      fetchPatient(props.match.params.id);  
+      fetchPatient(props.match.params.id);
+
+      console.log('id');
+      console.log(props.match.params.id);
+      //updatePatient( fetchPatient(props.match.params.id));  
 
     }
     else{
@@ -108,9 +110,10 @@ const useStyles = makeStyles((theme) => ({
   },[])
   
   useEffect(()=>{
-  //  console.log(patient);
-    if(patient){
-    //console.log(patient.plannedPregnancy);
+   console.log('patient:'); 
+   console.log(patient);
+    if(patient._id){
+    console.log('paso');
      update_Id(patient._id); 
      updateIdNumber(patient.idNumber);
      updateFamilyTcb(patient.familyTcb);
@@ -145,16 +148,32 @@ const useStyles = makeStyles((theme) => ({
      updateTerminationCondition(patient.terminationCondition);
      updatePlannedPregnancy(patient.plannedPregnancy);
      updateContraceptiveMethod(patient.contraceptiveMethod);
-
+     updateUpdating(true);
+     updateBottonLabel('Update');
+    }
+    else{
+      console.log('paso2');
+      updateUpdating(false);
+      update_Id(props.match.params.id);
+      updateBottonLabel('Save');
+     // console.log('done!');
     }
     
   },[patient])
   
-  const fetchPatient=async(_id)=>{
-    let fetchedPatient=await getHistoryIdFunction({id:_id});
-    let patientGeneral= await getPatientIdFunction({id:_id});
+  const fetchPatient=async(_idFetch)=>{
+    console.log('llegue a fetch');
+    let fetchedPatient=await getHistoryIdFunction({_id:_idFetch});
+    let patientGeneral= await getPatientIdFunction({id:_idFetch});
     updateName(patientGeneral.name+' '+patientGeneral.lastName )  
+    updateIdNumber(patientGeneral.idNumber);
+    console.log('desde fetch');
+    console.log(_idFetch);
+    console.log(fetchedPatient);
+    console.log(patientGeneral);
+    if (fetchedPatient){
     updatePatient(fetchedPatient);
+    }
     return ;
   };
 
@@ -162,7 +181,6 @@ const useStyles = makeStyles((theme) => ({
     setValue(newValue);
   };
    
-  
   const save=async(history)=>{
     try{
         updateLoading(true);
@@ -173,16 +191,20 @@ const useStyles = makeStyles((theme) => ({
         updateSavedStatus(true);
       //  console.log(history);
         let response;
-        if(!updating){
-
+        if(updating!==true){
+          console.log('save');
+          console.log(history);
+          history._id=_id;
           response =await saveHistoryFunction(history);
        }
        else{
+         console.log('update');
+        
           history._id=_id;
+        console.log(history);
           response = await updateHistoryFunction(history);
        }
-    //    let response = await saveHistoryFunction(history);
-      //  console.log('desde save' + response);
+
         if (response.statusText==="OK") {
           updateErrorStatus(false);
         }
@@ -211,13 +233,22 @@ const useStyles = makeStyles((theme) => ({
     {/* <h1 className="HistoryTitle"> History </h1> */}
     <h1  className="HistoryTitle"> 
          {'History '+name}
-      </h1>
+    </h1>
+      <div className="CenteredDiv">
+        <FormControl className={classes.formControl}>   
+        { savedStatus===true?
+          <Alert position="center" severity={errorStatus===true?'error':'success'}>{errorStatus===true ? 'An error occured, please check your data':'History saved succefully!                                             '}</Alert>
+          :''  
+        }
+        </FormControl>
+      </div>      
     <Container className="Container-History">
     <div className={classes.root}>
     {loading===true?<Loader></Loader>:   
     <form className={classes.root} noValidate autoComplete="off"
       onSubmit={ e=>{
         e.preventDefault();
+ 
         console.log(familyTcb);
         const history={
           idNumber,
@@ -254,19 +285,14 @@ const useStyles = makeStyles((theme) => ({
           plannedPregnancy,
           contraceptiveMethod
         }
-        //console.log(history);
+
         save (history);
         
       }
 
       }
     >
-      <FormControl className={classes.formControl}>   
-      { savedStatus===true?
-        <Alert severity={errorStatus===true?'error':'success'}>{errorStatus===true ? 'An error occured, please check your data':'Advert saved succefully!'}</Alert>
-        :''  
-      }
-      </FormControl>
+
       <AppBar className="AppBar" position="static" color="default">
         <Tabs
           value={value}
@@ -432,7 +458,7 @@ const useStyles = makeStyles((theme) => ({
                          variant="outlined"
                          size="small"
                          value={previousWeight}
-                         onChange={e=>{updatePreviousGestation(e.target.value)}}
+                         onChange={e=>{updatePreviousWeight (e.target.value)}}
                       />
                 </FormControl> 
                 <FormControl className={classes.formControl}> 
@@ -602,7 +628,11 @@ const useStyles = makeStyles((theme) => ({
         
       </TabPanel>
         <Grid container justify="center">
+            
             <ButtonGroup>
+            <Link to={{pathname:`/general/`+_id}} className="Link HistoryButton" >
+              <Button  className="centerButton HistoryButton" type="submit" variant="contained" color="primary">       History                          </Button>
+            </Link>
               <Button className="HistoryButton" type="submit" variant="contained" color="primary">    {buttonLabel}   </Button>
               <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Actual Gestation   </Button>
             </ButtonGroup>                
@@ -616,4 +646,5 @@ const useStyles = makeStyles((theme) => ({
     </Fragment>
   );
 }
-export default requireAuth( History);
+//export default requireAuth( History);
+export default  History;

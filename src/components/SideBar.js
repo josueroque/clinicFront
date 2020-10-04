@@ -140,7 +140,12 @@ export default function Sidebar(props) {
           </IconButton>
           <Link to={ {pathname: `/`}} className="Link" >  
           <Typography variant="h6" noWrap>
-             Gynecologysts Information System
+             Home
+          </Typography>
+          </Link>
+          <Link key ={'Login'} to={auth.token? {pathname: `/Login`}:{pathname: `/Logout`}}  className="Link loginMenu"  onClick={auth.token ?  ()=>logoutFunction({}) :()=>{}}>  
+          <Typography variant="h6" noWrap >
+          {!auth.token ? 'Login':'Logout'}
           </Typography>
           </Link>
         
