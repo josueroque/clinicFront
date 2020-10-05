@@ -1,6 +1,6 @@
 import axios from 'axios';
-//const apiUrl='https://clinic.josueroque.com/apiv1/';
-const apiUrl='http://localhost:3002/apiv1/';
+const apiUrl='https://clinic.josueroque.com/apiv1/';
+//const apiUrl='http://localhost:3002/apiv1/';
 export async function saveUser(user){  
     try {
          
