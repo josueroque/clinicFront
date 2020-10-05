@@ -345,6 +345,17 @@ return(
             onChange={e=>{updateChildBirthPlace(e.target.value)}}    
           />
         </FormControl>
+        <FormControl className={classes.formControl}> 
+          <TextField 
+            className="FormTextGeneral"
+            id="clinicalProfile"
+            label="Clinical Profile"
+            variant="outlined"
+            size="small"
+            value={childBirthPlace}
+            onChange={e=>{updateChildBirthPlace(e.target.value)}}    
+          />
+        </FormControl>
         </Container>           
       </FormGroup>
 

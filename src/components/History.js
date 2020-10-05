@@ -630,8 +630,8 @@ const useStyles = makeStyles((theme) => ({
         <Grid container justify="center">
             
             <ButtonGroup>
-            <Link to={{pathname:`/general/`+_id}} className="Link HistoryButton" >
-              <Button  className="centerButton HistoryButton" type="submit" variant="contained" color="primary">       History                          </Button>
+            <Link to={{pathname:`/general/`+_id}} className="Link" >
+              <Button  className="HistoryButton" type="submit" variant="contained" color="primary">       History                          </Button>
             </Link>
               <Button className="HistoryButton" type="submit" variant="contained" color="primary">    {buttonLabel}   </Button>
               <Button className="HistoryButton" type="submit" variant="contained" color="primary">    Actual Gestation   </Button>
